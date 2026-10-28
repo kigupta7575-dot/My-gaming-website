@@ -1,3 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Gaming Zone - Puzzle</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; text-align: center;
+  font-family: Arial, sans-serif; color: white;
+  background: linear-gradient(135deg,#141e30,#243b55);
+  padding: 24px 12px;
+}
+h1 { color: #ffd54a; }
+p { color: #dce6f2; }
+#board {
+  width: min(90vw, 330px); aspect-ratio: 1;
+  margin: 22px auto; display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 7px; padding: 7px;
+  background: #0b1220; border-radius: 16px;
+}
+.tile {
+  border: 0; border-radius: 10px;
+  background: linear-gradient(145deg,#00c6ff,#0072ff);
+  color: white; font-size: 30px; font-weight: bold;
+  cursor: pointer; box-shadow: 0 3px 7px #0005;
+}
+.tile:active { transform: scale(.96); }
+.empty { background: #202b3c; box-shadow: none; }
+button.action {
+  padding: 12px 22px; margin: 5px;
+  border: 0; border-radius: 10px;
+  font-size: 16px; font-weight: bold; cursor: pointer;
+}
+#restart { background: #ffd54a; color: #182238; }
+#moves { font-size: 20px; color: #ffd54a; }
+#message { min-height: 28px; color: #70ffb0; font-weight: bold; }
+</style>
+</head>
+<body>
+<h1>🎮 My Gaming Zone</h1>
+<h2>🧩 Number Puzzle</h2>
+<p>Tap a tile next to the empty space to move it.</p>
+<div id="moves">Moves: 0</div>
+<div id="board"></div>
+<div id="message"></div>
+<button class="action" id="restart" onclick="startGame()">🔄 Restart</button>
+
+<script>
+let tiles = [];
+let moves = 0;
+let finished = false;
+
+function draw() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+  tiles.forEach((n, i) => {
+    const b = document.createElement("button");
+    b.className = "tile" + (n === 0 ? " empty" : "");
+    b.textContent = n || "";
+    b.setAttribute("aria-label", n ? "Tile " + n : "Empty space");
+    b.onclick = () => move(i);
+    board.appendChild(b);
+  });
+  document.getElementById("moves").textContent = "Moves: " + moves;
+}
+
+function move(i) {
+  if (finished) return;
+  const empty = tiles.indexOf(0);
+  const sameRow = Math.floor(i / 3) === Math.floor(empty / 3);
+  const nextTo = (sameRow && Math.abs(i - empty) === 1)
+    || Math.abs(i - empty) === 3;
+  if (!nextTo) return;
+
+  [tiles[i], tiles[empty]] = [tiles[empty], tiles[i]];
+  moves++;
+  draw();
+
+  if (tiles.slice(0, 8).every((n, j) => n === j + 1)) {
+    finished = true;
+    document.getElementById("message").textContent =
+      "🎉 You solved the puzzle!";
+  }
+}
+
+function startGame() {
+  tiles = [1,2,3,4,5,6,7,8,0];
+  let empty = 8;
+  let previous = -1;
+
+  // Shuffle through legal moves so the puzzle stays solvable.
+  for (let k = 0; k < 150; k++) {
+    let choices = [empty-3, empty+3];
+    if (empty % 3 !== 0) choices.push(empty-1);
+    if (empty % 3 !== 2) choices.push(empty+1);
+    choices = choices.filter(i => i >= 0 && i < 9 && i !== previous);
+    const pick = choices[Math.floor(Math.random()*choices.length)];
+    [tiles[empty], tiles[pick]] = [tiles[pick], tiles[empty]];
+    previous = empty;
+    empty = pick;
+  }
+
+  moves = 0;
+  finished = false;
+  document.getElementById("message").textContent = "";
+  draw();
+}
+
+startGame();
+</script>
+</body>
+</html>
  
 <!DOCTYPE html>
 <html lang="en">
