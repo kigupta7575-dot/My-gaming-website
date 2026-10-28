@@ -1,1 +1,40 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Gaming Zone</title>
+  <style>
+    body {
+      background: #101323;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { color: #38e8a5; }
+    button {
+      background: #38e8a5;
+      padding: 14px 25px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+    #game { font-size: 25px; margin: 25px; }
+  </style>
+</head>
+<body>
+  <h1>🎮 My Gaming Zone</h1>
+  <p>Welcome to my gaming website!</p>
+  <h2>Tap Challenge</h2>
+  <div id="game">Score: 0</div>
+  <button onclick="score++; document.getElementById('game').innerText='Score: '+score">
+    TAP TO PLAY
+  </button>
+  <script>
+    let score = 0;
+  </script>
+</body>
+</html>
+
 
